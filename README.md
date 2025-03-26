@@ -1,7 +1,7 @@
 # custom.animation
 Auto Animation Scripts for Unity
 
-Welcome to fridvince@gmx.us! ✨ These scripts are designed to simplify animation handling in Unity, providing smooth automatic effects for UI and relationships between game objects.
+Welcome to fridvince@gmx.us! These scripts are designed to simplify animation handling in Unity, providing smooth automatic effects for UI and relationships between game objects.
 
 🚀 Features
 
@@ -11,6 +11,10 @@ AutoAlpha: Animates Canvas Group component. AutoColor: Image component parameter
 Specific (depth)
 
 AutoKiller: Stops all animation by method. AutoStart: Starts all animation by method. AutoRandomised: Random, controlled random. AutoScroll: Turn scrolling off if its not enough content for scrolling (UX depth feature).
+
+✨ BONUS
+
+Common (Atomic) frameworks to handle Button and Buttons Group (ToggleGroup without toggles)
 
 📜 How to Use
 
