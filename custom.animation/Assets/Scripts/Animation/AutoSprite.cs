@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,11 +8,6 @@ namespace fridvince.Game.Common.Animation
     public class AutoSprite : MonoBehaviour
     {
         [Header("Animation Settings")]
-        #if UNITY_EDITOR
-        [Tooltip("Drag a folder from the Unity Project here containing the sprite sequence.")]
-        [SerializeField] private UnityEditor.DefaultAsset _spriteFolder = null;
-        #endif
-
         [Tooltip("Animation speed as a value between 0 (0 FPS) and 1 (64 FPS).")]
         [SerializeField, Range(0f, 1f)] private float _animationSpeed = 0.5f;
 
@@ -30,7 +23,11 @@ namespace fridvince.Game.Common.Animation
         [Tooltip("The duration of one animation cycle in seconds. Overrides animation speed when used with randomizer.")]
         [SerializeField] public float _animationDuration;
 
-        private List<Sprite> _frames = new();
+        [Header("Sprite Folder Path")]
+        [Tooltip("Path to the folder containing the sprite images, relative to Resources.")]
+        [SerializeField] private string _spriteFolderPath = "Sprites/Fire";  // Example default path
+
+        private List<Sprite> _frames = new List<Sprite>();
         private Image _imageComponent;
         private float _timePerFrame;
         private float _timeElapsed;
@@ -142,55 +139,24 @@ namespace fridvince.Game.Common.Animation
 
         private void LoadFrames()
         {
-            #if UNITY_EDITOR
-            if (_spriteFolder == null)
+            // Load sprites from the user-specified folder inside Resources
+            if (string.IsNullOrEmpty(_spriteFolderPath))
             {
-                Debug.LogWarning("Sprite folder is not set.");
+                Debug.LogWarning("Sprite folder path is not set.");
                 return;
             }
 
-            string folderPath = UnityEditor.AssetDatabase.GetAssetPath(_spriteFolder);
-            if (string.IsNullOrEmpty(folderPath) || !Directory.Exists(folderPath))
+            // Ensure the path is correctly formatted and load the sprites
+            Sprite[] loadedSprites = Resources.LoadAll<Sprite>(_spriteFolderPath);
+
+            if (loadedSprites.Length > 0)
             {
-                Debug.LogError($"Folder does not exist: {folderPath}");
-                return;
+                _frames.AddRange(loadedSprites);
             }
-
-            string[] filePaths = Directory.GetFiles(folderPath, "*.png");
-
-            var sortedFrames = filePaths
-                .Where(path => Path.GetFileNameWithoutExtension(path).EndsWith("-000") ||
-                               int.TryParse(Path.GetFileNameWithoutExtension(path).Split('-').Last(), out _))
-                .OrderBy(path => path)
-                .ToArray();
-
-            foreach (string filePath in sortedFrames)
+            else
             {
-                Sprite sprite = LoadSprite(filePath);
-                if (sprite != null)
-                {
-                    _frames.Add(sprite);
-                }
+                Debug.LogWarning($"No sprites found in Resources/{_spriteFolderPath}. Animation will not play.");
             }
-
-            if (_frames.Count == 0)
-            {
-                Debug.LogWarning($"No valid sprites found in folder: {folderPath}");
-            }
-            #endif
-        }
-
-        private Sprite LoadSprite(string filePath)
-        {
-            byte[] fileData = File.ReadAllBytes(filePath);
-            Texture2D texture = new Texture2D(2, 2);
-            if (texture.LoadImage(fileData))
-            {
-                return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-            }
-
-            Debug.LogWarning($"Failed to load sprite: {filePath}");
-            return null;
         }
 
         private void UpdateTimePerFrame()
