@@ -3,6 +3,9 @@ Auto Animation Scripts for Unity
 
 Welcome to fridvince@gmx.us! These scripts are designed to simplify animation handling in Unity, providing smooth automatic effects for UI and relationships between game objects.
 
+DOWNLOAD HERE:
+https://github.com/fridvince/custom.animation/blob/e217aa8514a4edb335a05e40431c94c6e27a331d/animation.unitypackage
+
 🚀 Features
 
 AutoAlpha: Animates Canvas Group component. AutoColor: Image component parameters animation. AutoCounter: Counting by curves. AutoTitle: Animated text appearance with bounce effect. AutoMove: Moves objects along a curve-defined motion. AutoRotation: Rotates objects based on animation curves. AutoScale: Scales objects based on animation curves. AutoSize: Animated Layout Element parameters. AutoParent: Dynamically handles the Parent Constraint component.
